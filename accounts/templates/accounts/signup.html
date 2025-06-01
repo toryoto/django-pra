@@ -1,11 +1,33 @@
 {% extends "base.html" %}
 {% load django_bootstrap5 %}
+{% load socialaccount %}
 
 {% block main %}
 <h2>会員登録</h2>
+
+<!-- Google認証ボタン -->
+<div class="text-center mb-4">
+    <a href="{% provider_login_url 'google' %}" class="btn btn-danger btn-lg">
+        <i class="fab fa-google me-2"></i>Googleで登録
+    </a>
+</div>
+
+<hr class="my-4">
+
+<!-- 通常の会員登録フォーム -->
+<div class="text-center mb-3">
+    <h5>またはメールアドレスで登録</h5>
+</div>
 <form method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
     {% bootstrap_button button_type="submit" content="登録" %}
 </form>
+
+<hr class="my-4">
+
+<!-- ログインリンク -->
+<div class="text-center">
+    <p>既にアカウントをお持ちの方は <a href="{% url 'login' %}">ログイン</a></p>
+</div>
 {% endblock %}

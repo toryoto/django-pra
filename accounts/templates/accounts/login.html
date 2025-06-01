@@ -1,13 +1,32 @@
 {% extends "base.html" %}
 {% load django_bootstrap5 %}
+{% load socialaccount %}
 
 {% block main %}
 <h2>ログイン</h2>
 
+<!-- 通常のログインフォーム -->
 <form method="post">
     {% csrf_token %}
     <input type="hidden" name="next" value="{{ next }}" />
     {% bootstrap_form form %}
     {% bootstrap_button button_type="submit" content="ログイン" %}
 </form>
+
+<hr class="my-4">
+
+<!-- Google認証ボタン -->
+<div class="text-center">
+    <h5>または</h5>
+    <a href="{% provider_login_url 'google' %}" class="btn btn-danger btn-lg">
+        <i class="fab fa-google me-2"></i>Googleでログイン
+    </a>
+</div>
+
+<hr class="my-4">
+
+<!-- 会員登録リンク -->
+<div class="text-center">
+    <p>アカウントをお持ちでない方は <a href="{% url 'signup' %}">会員登録</a></p>
+</div>
 {% endblock %}
