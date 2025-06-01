@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'snippets.apps.SnippetsConfig',
     'django_bootstrap5',
-    'pygments_renderer'
+    'pygments_renderer',
+    'accounts.apps.AccountsConfig'
 ]
 
 MIDDLEWARE = [
@@ -123,3 +124,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ユーザー認証(@login_requiredなどを使うと未認証ユーザがアクセスした際に自動的にLOGIN_URLが参照される)
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
