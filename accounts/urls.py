@@ -15,5 +15,4 @@ urlpatterns = [
         template_name='accounts/login.html'
     ), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    
 ]

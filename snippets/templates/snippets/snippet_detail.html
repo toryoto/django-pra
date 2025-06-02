@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load pygmentize %}
+{% load django_bootstrap5 %}
 
 {% block extraheader %}
 <style>{% pygments_css %}</style>
@@ -20,4 +21,49 @@
 </div>
 
 <p>{{ snippet.description }}</p>
+
+<hr class="my-4">
+
+<div class="comments-section">
+    <h3>コメント ({{ comments|length }})</h3>
+    
+    <!-- コメント投稿フォーム（ログインユーザーのみ） -->
+    {% comment %} {% if user.is_authenticated %}
+    <div class="comment-form mb-4">
+        <h4>コメントを投稿</h4>
+        <form method="post" action="{% url 'comment_create' snippet.id %}">
+            {% csrf_token %}
+            {% bootstrap_form comment_form %}
+            {% bootstrap_button button_type="submit" content="コメントを投稿" %}
+        </form>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        コメントを投稿するには<a href="{% url 'login' %}">ログイン</a>してください。
+    </div>
+    {% endif %} {% endcomment %}
+    
+    <!-- コメント一覧 -->
+    {% if comments %}
+        <div class="comments-list">
+            {% for comment in comments %}
+            <div class="comment mb-3 p-3 border rounded">
+                <div class="comment-content">
+                    <p>{{ comment.text|linebreaks }}</p>
+                </div>
+                <div class="comment-meta text-muted">
+                    <small>
+                        by <strong>{{ comment.commented_by.username }}</strong> - 
+                        {{ comment.commented_at|date:"Y年m月d日 H:i" }}
+                    </small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-comments">
+            <p class="text-muted">まだコメントがありません。最初のコメントを投稿してみませんか？</p>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

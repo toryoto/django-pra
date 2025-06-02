@@ -1,10 +1,10 @@
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
-from snippets.models import Snippet
+from snippets.models import Snippet, Comment
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_safe
 
-from snippets.forms import SnippetForm
+from snippets.forms import SnippetForm, CommentForm
 
 @require_safe
 def top(request):
@@ -47,4 +47,13 @@ def snippet_edit(request, snippet_id):
 
 def snippet_detail(request, snippet_id):
     snippet = get_object_or_404(Snippet, pk=snippet_id)
-    return render(request, "snippets/snippet_detail.html", {'snippet': snippet})
+    comments = Comment.objects.filter(commented_to=snippet_id).order_by('commented_at')
+    comment_form = CommentForm()
+    
+    print(f"コメント数: {comments.count()}")
+    
+    return render(request, "snippets/snippet_detail.html", {
+        'snippet': snippet,
+        'comments': comments,
+        'comment_form': comment_form
+    })
