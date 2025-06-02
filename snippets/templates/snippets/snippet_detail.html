@@ -28,10 +28,10 @@
     <h3>コメント ({{ comments|length }})</h3>
     
     <!-- コメント投稿フォーム（ログインユーザーのみ） -->
-    {% comment %} {% if user.is_authenticated %}
+    {% if user.is_authenticated %}
     <div class="comment-form mb-4">
         <h4>コメントを投稿</h4>
-        <form method="post" action="{% url 'comment_create' snippet.id %}">
+        <form method="post" action="{% url 'comment_new' snippet.id %}">
             {% csrf_token %}
             {% bootstrap_form comment_form %}
             {% bootstrap_button button_type="submit" content="コメントを投稿" %}
@@ -41,7 +41,7 @@
     <div class="alert alert-info">
         コメントを投稿するには<a href="{% url 'login' %}">ログイン</a>してください。
     </div>
-    {% endif %} {% endcomment %}
+    {% endif %}
     
     <!-- コメント一覧 -->
     {% if comments %}

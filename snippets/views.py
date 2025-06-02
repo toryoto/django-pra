@@ -44,7 +44,7 @@ def snippet_edit(request, snippet_id):
         form = SnippetForm(instance=snippet)
     return render(request, 'snippets/snippet_edit.html', {'form': form})
 
-
+@login_required
 def snippet_detail(request, snippet_id):
     snippet = get_object_or_404(Snippet, pk=snippet_id)
     comments = Comment.objects.filter(commented_to=snippet_id).order_by('commented_at')
@@ -57,3 +57,25 @@ def snippet_detail(request, snippet_id):
         'comments': comments,
         'comment_form': comment_form
     })
+
+# 開発手順
+# 1. コメント投稿フォームの生成、Templateへの送信
+# 2. POSTリクエストの処理(DBへの保存)
+# 3. 保存後のリダイレクト
+# 4. GETリクエスト時は空のフォームを表示
+@login_required
+def comment_new(request, snippet_id):
+    snippet = get_object_or_404(Snippet, pk=snippet_id)
+    
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.commented_to = snippet
+            comment.commented_by = request.user
+            comment.save()
+            return redirect(snippet_detail, snippet_id=snippet.pk)
+    else:
+        form = CommentForm()
+    
+    return redirect('snippet_detail', snippet_id=snippet_id)
